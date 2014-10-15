@@ -1,4 +1,5 @@
 /// <reference path="angular.d.ts" />
+
 function jsonp(url) {
     var script = document.createElement('script');
     script.type = 'text/javascript';
@@ -7,7 +8,10 @@ function jsonp(url) {
 }
 
 function acceptData(data) {
-    document.getElementById('results').innerText = JSON.stringify(data);
+    var descriptions = data.data.map(function (c) {
+        return c.commit.message;
+    });
+    document.getElementById('results').innerHTML = descriptions.join('<br>');
 }
 
 window.onload = function () {
