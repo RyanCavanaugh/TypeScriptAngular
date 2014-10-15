@@ -12,4 +12,15 @@ function commitListController($scope, $http) {
     });
 }
 
-angular.module('sampleApp', []).controller('CommitList', commitListController);
+function messageShortenerFilter() {
+    return function (s) {
+        var max = 80;
+        if (s.length > max) {
+            return s.substr(0, max - 3) + '...';
+        } else {
+            return s;
+        }
+    };
+}
+
+angular.module('sampleApp', []).controller('CommitList', commitListController).filter('shorten', messageShortenerFilter);

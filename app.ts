@@ -11,6 +11,18 @@ function commitListController($scope: any, $http: ng.IHttpService) {
     });
 }
 
+function messageShortenerFilter() {
+    return function (s: string): string {
+        var max = 80;
+        if (s.length > max) {
+            return s.substr(0, max - 3) + '...';
+        } else {
+            return s;
+        }
+    }
+}
+
 angular.module('sampleApp', [])
-    .controller('CommitList', commitListController);
+    .controller('CommitList', commitListController)
+    .filter('shorten', messageShortenerFilter);
 

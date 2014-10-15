@@ -10,7 +10,7 @@
 </head>
 <body ng-app="sampleApp" ng-controller="CommitList">
     <div ng-repeat="c in commits">
-        <div><a href="{{c.link}}">{{c.title}}</a> by {{c.author}}</div>
+        <div><a href="{{c.link}}">{{c.title | shorten}}</a> by {{c.author}}</div>
     </div>
 </body>
 </html>
