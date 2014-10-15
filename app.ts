@@ -3,11 +3,11 @@
 
 class CommitDataService {
     static Name = 'CommitData';
-
-    constructor(public $http: ng.IHttpService) { }
+    static Constructor = ['$http', CommitDataService];
+    constructor(public http: ng.IHttpService) { }
 
     getCommits(callback: (data: CommitInfo[]) => void) {
-        this.$http.jsonp<CommitData>('https://api.github.com/repos/Microsoft/TypeScript/commits?callback=JSON_CALLBACK').success(data => {
+        this.http.jsonp<CommitData>('https://api.github.com/repos/Microsoft/TypeScript/commits?callback=JSON_CALLBACK').success(data => {
             callback(data.data);
         });
     }
@@ -47,7 +47,7 @@ function messageShortenerFilter() {
 }
 
 angular.module('sampleApp', [])
-    .service(CommitDataService.Name,  CommitDataService)
+    .service(CommitDataService.Name,  CommitDataService.Constructor)
     .controller('CommitList',  commitListController.constructor)
     .filter('shorten', messageShortenerFilter);
 

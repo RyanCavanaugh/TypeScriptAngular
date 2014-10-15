@@ -1,15 +1,16 @@
 /// <reference path="angular.d.ts" />
 /// <reference path="octokit.d.ts" />
 var CommitDataService = (function () {
-    function CommitDataService($http) {
-        this.$http = $http;
+    function CommitDataService(http) {
+        this.http = http;
     }
     CommitDataService.prototype.getCommits = function (callback) {
-        this.$http.jsonp('https://api.github.com/repos/Microsoft/TypeScript/commits?callback=JSON_CALLBACK').success(function (data) {
+        this.http.jsonp('https://api.github.com/repos/Microsoft/TypeScript/commits?callback=JSON_CALLBACK').success(function (data) {
             callback(data.data);
         });
     };
     CommitDataService.Name = 'CommitData';
+    CommitDataService.Constructor = ['$http', CommitDataService];
     return CommitDataService;
 })();
 
@@ -41,4 +42,4 @@ function messageShortenerFilter() {
     };
 }
 
-angular.module('sampleApp', []).service(CommitDataService.Name, CommitDataService).controller('CommitList', commitListController.constructor).filter('shorten', messageShortenerFilter);
+angular.module('sampleApp', []).service(CommitDataService.Name, CommitDataService.Constructor).controller('CommitList', commitListController.constructor).filter('shorten', messageShortenerFilter);
