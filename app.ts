@@ -1,7 +1,15 @@
 /// <reference path="angular.d.ts" />
 /// <reference path="octokit.d.ts" />
 
-function commitListController($scope: any, CommitData: any) {
+interface CommitListControllerScope extends ng.IScope {
+    commits: {
+        title: string;
+        author: string;
+        link: string;
+    }[];
+}
+
+function commitListController($scope: CommitListControllerScope, CommitData: any) {
     CommitData.getCommits(commits => {
         $scope.commits = commits.map(c => ({
             title: c.commit.message,
