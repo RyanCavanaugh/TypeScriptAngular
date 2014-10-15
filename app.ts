@@ -9,8 +9,8 @@ interface CommitListControllerScope extends ng.IScope {
     }[];
 }
 
-function commitListController($scope: CommitListControllerScope, CommitData: any) {
-    CommitData.getCommits(commits => {
+function commitListController($scope: CommitListControllerScope, commitData: any) {
+    commitData.getCommits(commits => {
         $scope.commits = commits.map(c => ({
             title: c.commit.message,
             author: c.commit.author.name,

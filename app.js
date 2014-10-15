@@ -1,8 +1,8 @@
 /// <reference path="angular.d.ts" />
 /// <reference path="octokit.d.ts" />
 
-function commitListController($scope, CommitData) {
-    CommitData.getCommits(function (commits) {
+function commitListController($scope, commitData) {
+    commitData.getCommits(function (commits) {
         $scope.commits = commits.map(function (c) {
             return ({
                 title: c.commit.message,
