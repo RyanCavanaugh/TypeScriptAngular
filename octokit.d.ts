@@ -1,14 +1,16 @@
 interface CommitData {
-    data: {
-        sha: string;
-        commit: {
-            author: {
-                name: string;
-                email: string;
-                date: string;
-            };
-            message: string;
+    data: CommitInfo[];
+}
+
+interface CommitInfo {
+    sha: string;
+    commit: {
+        author: {
+            name: string;
+            email: string;
+            date: string;
         };
-        html_url: string;
-    }[];
+        message: string;
+    };
+    html_url: string;
 }

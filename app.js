@@ -1,8 +1,8 @@
 /// <reference path="angular.d.ts" />
 /// <reference path="octokit.d.ts" />
-function commitListController($scope, $http) {
-    $http.jsonp('https://api.github.com/repos/Microsoft/TypeScript/commits?callback=JSON_CALLBACK').success(function (data) {
-        $scope.commits = data.data.map(function (c) {
+function commitListController($scope, CommitData) {
+    CommitData.getCommits(function (commits) {
+        $scope.commits = commits.map(function (c) {
             return ({
                 title: c.commit.message,
                 author: c.commit.author.name,
@@ -10,6 +10,16 @@ function commitListController($scope, $http) {
             });
         });
     });
+}
+
+function commitDataService($http) {
+    return {
+        getCommits: function (callback) {
+            $http.jsonp('https://api.github.com/repos/Microsoft/TypeScript/commits?callback=JSON_CALLBACK').success(function (data) {
+                callback(data.data);
+            });
+        }
+    };
 }
 
 function messageShortenerFilter() {
@@ -23,4 +33,4 @@ function messageShortenerFilter() {
     };
 }
 
-angular.module('sampleApp', []).controller('CommitList', commitListController).filter('shorten', messageShortenerFilter);
+angular.module('sampleApp', []).service('CommitData', commitDataService).controller('CommitList', commitListController).filter('shorten', messageShortenerFilter);
