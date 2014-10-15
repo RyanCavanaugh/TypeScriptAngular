@@ -12,6 +12,12 @@ class GitHubDataService {
             callback(data.data);
         });
     }
+
+    getUserInfo(username: string, callback: (data: UserInfo) => void) {
+        this.http.jsonp<UserData>('https://api.github.com/users/' + username + '?callback=JSON_CALLBACK').success(data => {
+            callback(data.data);
+        });
+    }
 }
 
 module CommitListController {
@@ -20,6 +26,7 @@ module CommitListController {
             title: string;
             author: string;
             link: string;
+            authorLink: string;
         }[];
     }
 
@@ -29,8 +36,30 @@ module CommitListController {
             scope.commits = commits.map(c => ({
                 title: c.commit.message,
                 author: c.commit.author.name,
-                link: c.html_url
+                link: c.html_url,
+                authorLink: '#/userView/' + c.author.login
             }));
+        });
+    }
+}
+
+module UserInfoController {
+    export interface Scope extends ng.IScope {
+        name: string;
+        id: string;
+        picture: string;
+    }
+
+    export interface RouteParameters {
+        userId: string;
+    }
+
+    export var Constructor = ['$scope', '$routeParams', GitHubDataService.Name, Controller];
+    export function Controller(scope: Scope, params: RouteParameters, dataService: GitHubDataService) {
+        dataService.getUserInfo(params.userId, data => {
+            scope.name = data.name;
+            scope.id = data.login;
+            scope.picture = data.avatar_url;
         });
     }
 }
@@ -49,6 +78,7 @@ function messageShortenerFilter() {
 function route($routeProvider: ng.route.IRouteProvider) {
     $routeProvider
         .when('/commitList', { templateUrl: 'commitList.html', controller: 'CommitList' })
+        .when('/userView/:userId', { templateUrl: 'userView.html', controller: 'UserInfo' })
         .otherwise({ redirectTo: '/commitList' });
 }
 
@@ -56,5 +86,6 @@ angular.module('sampleApp', ['ngRoute'])
     .config(route)
     .service(GitHubDataService.Name,  GitHubDataService.Constructor)
     .controller('CommitList',  CommitListController.Constructor)
+    .controller('UserInfo', UserInfoController.Constructor)
     .filter('shorten', messageShortenerFilter);
 

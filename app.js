@@ -10,6 +10,12 @@ var GitHubDataService = (function () {
             callback(data.data);
         });
     };
+
+    GitHubDataService.prototype.getUserInfo = function (username, callback) {
+        this.http.jsonp('https://api.github.com/users/' + username + '?callback=JSON_CALLBACK').success(function (data) {
+            callback(data.data);
+        });
+    };
     GitHubDataService.Name = 'GitHubData';
     GitHubDataService.Constructor = ['$http', GitHubDataService];
     return GitHubDataService;
@@ -24,13 +30,27 @@ var CommitListController;
                 return ({
                     title: c.commit.message,
                     author: c.commit.author.name,
-                    link: c.html_url
+                    link: c.html_url,
+                    authorLink: '#/userView/' + c.author.login
                 });
             });
         });
     }
     CommitListController.Controller = Controller;
 })(CommitListController || (CommitListController = {}));
+
+var UserInfoController;
+(function (UserInfoController) {
+    UserInfoController.Constructor = ['$scope', '$routeParams', GitHubDataService.Name, Controller];
+    function Controller(scope, params, dataService) {
+        dataService.getUserInfo(params.userId, function (data) {
+            scope.name = data.name;
+            scope.id = data.login;
+            scope.picture = data.avatar_url;
+        });
+    }
+    UserInfoController.Controller = Controller;
+})(UserInfoController || (UserInfoController = {}));
 
 function messageShortenerFilter() {
     return function (s) {
@@ -44,7 +64,7 @@ function messageShortenerFilter() {
 }
 
 function route($routeProvider) {
-    $routeProvider.when('/commitList', { templateUrl: 'commitList.html', controller: 'CommitList' }).otherwise({ redirectTo: '/commitList' });
+    $routeProvider.when('/commitList', { templateUrl: 'commitList.html', controller: 'CommitList' }).when('/userView/:userId', { templateUrl: 'userView.html', controller: 'UserInfo' }).otherwise({ redirectTo: '/commitList' });
 }
 
-angular.module('sampleApp', ['ngRoute']).config(route).service(GitHubDataService.Name, GitHubDataService.Constructor).controller('CommitList', CommitListController.Constructor).filter('shorten', messageShortenerFilter);
+angular.module('sampleApp', ['ngRoute']).config(route).service(GitHubDataService.Name, GitHubDataService.Constructor).controller('CommitList', CommitListController.Constructor).controller('UserInfo', UserInfoController.Constructor).filter('shorten', messageShortenerFilter);
