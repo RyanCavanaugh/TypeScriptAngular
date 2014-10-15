@@ -28,6 +28,9 @@ function commitDataService($http: ng.IHttpService) {
         }
     };
 }
+module commitDataService {
+    export var ServiceName = 'CommitData';
+}
 
 function messageShortenerFilter() {
     return function (s: string): string {
@@ -41,7 +44,7 @@ function messageShortenerFilter() {
 }
 
 angular.module('sampleApp', [])
-    .service('CommitData', commitDataService)
-    .controller('CommitList', commitListController)
+    .service(commitDataService.ServiceName,  commitDataService)
+    .controller('CommitList',  ['$scope', commitDataService.ServiceName, commitListController])
     .filter('shorten', messageShortenerFilter);
 

@@ -22,6 +22,10 @@ function commitDataService($http) {
         }
     };
 }
+var commitDataService;
+(function (commitDataService) {
+    commitDataService.ServiceName = 'CommitData';
+})(commitDataService || (commitDataService = {}));
 
 function messageShortenerFilter() {
     return function (s) {
@@ -34,4 +38,4 @@ function messageShortenerFilter() {
     };
 }
 
-angular.module('sampleApp', []).service('CommitData', commitDataService).controller('CommitList', commitListController).filter('shorten', messageShortenerFilter);
+angular.module('sampleApp', []).service(commitDataService.ServiceName, commitDataService).controller('CommitList', ['$scope', commitDataService.ServiceName, commitListController]).filter('shorten', messageShortenerFilter);
