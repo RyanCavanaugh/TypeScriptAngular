@@ -1,18 +1,17 @@
 /// <reference path="angular.d.ts" />
 /// <reference path="octokit.d.ts" />
-function commitDataService($http) {
-    return {
-        getCommits: function (callback) {
-            $http.jsonp('https://api.github.com/repos/Microsoft/TypeScript/commits?callback=JSON_CALLBACK').success(function (data) {
-                callback(data.data);
-            });
-        }
+var CommitDataService = (function () {
+    function CommitDataService($http) {
+        this.$http = $http;
+    }
+    CommitDataService.prototype.getCommits = function (callback) {
+        this.$http.jsonp('https://api.github.com/repos/Microsoft/TypeScript/commits?callback=JSON_CALLBACK').success(function (data) {
+            callback(data.data);
+        });
     };
-}
-var commitDataService;
-(function (commitDataService) {
-    commitDataService.ServiceName = 'CommitData';
-})(commitDataService || (commitDataService = {}));
+    CommitDataService.Name = 'CommitData';
+    return CommitDataService;
+})();
 
 function commitListController($scope, commitData) {
     commitData.getCommits(function (commits) {
@@ -27,7 +26,7 @@ function commitListController($scope, commitData) {
 }
 var commitListController;
 (function (commitListController) {
-    commitListController.dependencies = ['$scope', commitDataService.ServiceName];
+    commitListController.dependencies = ['$scope', CommitDataService.Name];
     commitListController.constructor = commitListController.dependencies.concat(commitListController);
 })(commitListController || (commitListController = {}));
 
@@ -42,4 +41,4 @@ function messageShortenerFilter() {
     };
 }
 
-angular.module('sampleApp', []).service(commitDataService.ServiceName, commitDataService).controller('CommitList', commitListController.constructor).filter('shorten', messageShortenerFilter);
+angular.module('sampleApp', []).service(CommitDataService.Name, CommitDataService).controller('CommitList', commitListController.constructor).filter('shorten', messageShortenerFilter);
