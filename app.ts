@@ -13,26 +13,25 @@ class CommitDataService {
     }
 }
 
-interface CommitListControllerScope extends ng.IScope {
-    commits: {
-        title: string;
-        author: string;
-        link: string;
-    }[];
-}
+module CommitListController {
+    export interface Scope extends ng.IScope {
+        commits: {
+            title: string;
+            author: string;
+            link: string;
+        }[];
+    }
 
-function commitListController($scope: CommitListControllerScope, commitData: CommitDataService) {
-    commitData.getCommits(commits => {
-        $scope.commits = commits.map(c => ({
-            title: c.commit.message,
-            author: c.commit.author.name,
-            link: c.html_url
-        }));
-    });
-}
-module commitListController {
-    export var dependencies = ['$scope', CommitDataService.Name];
-    export var constructor = dependencies.concat<any>(commitListController);
+    export var Constructor = ['$scope', CommitDataService.Name, Controller];
+    export function Controller(scope: Scope, commitData: CommitDataService) {
+        commitData.getCommits(commits => {
+            scope.commits = commits.map(c => ({
+                title: c.commit.message,
+                author: c.commit.author.name,
+                link: c.html_url
+            }));
+        });
+    }
 }
 
 function messageShortenerFilter() {
@@ -48,6 +47,6 @@ function messageShortenerFilter() {
 
 angular.module('sampleApp', [])
     .service(CommitDataService.Name,  CommitDataService.Constructor)
-    .controller('CommitList',  commitListController.constructor)
+    .controller('CommitList',  CommitListController.Constructor)
     .filter('shorten', messageShortenerFilter);
 

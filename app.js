@@ -14,22 +14,22 @@ var CommitDataService = (function () {
     return CommitDataService;
 })();
 
-function commitListController($scope, commitData) {
-    commitData.getCommits(function (commits) {
-        $scope.commits = commits.map(function (c) {
-            return ({
-                title: c.commit.message,
-                author: c.commit.author.name,
-                link: c.html_url
+var CommitListController;
+(function (CommitListController) {
+    CommitListController.Constructor = ['$scope', CommitDataService.Name, Controller];
+    function Controller(scope, commitData) {
+        commitData.getCommits(function (commits) {
+            scope.commits = commits.map(function (c) {
+                return ({
+                    title: c.commit.message,
+                    author: c.commit.author.name,
+                    link: c.html_url
+                });
             });
         });
-    });
-}
-var commitListController;
-(function (commitListController) {
-    commitListController.dependencies = ['$scope', CommitDataService.Name];
-    commitListController.constructor = commitListController.dependencies.concat(commitListController);
-})(commitListController || (commitListController = {}));
+    }
+    CommitListController.Controller = Controller;
+})(CommitListController || (CommitListController = {}));
 
 function messageShortenerFilter() {
     return function (s) {
@@ -42,4 +42,4 @@ function messageShortenerFilter() {
     };
 }
 
-angular.module('sampleApp', []).service(CommitDataService.Name, CommitDataService.Constructor).controller('CommitList', commitListController.constructor).filter('shorten', messageShortenerFilter);
+angular.module('sampleApp', []).service(CommitDataService.Name, CommitDataService.Constructor).controller('CommitList', CommitListController.Constructor).filter('shorten', messageShortenerFilter);
