@@ -15,21 +15,11 @@ interface CommitData {
     }[];
 }
 
-function jsonp(url: string) {
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = url;
-    document.head.appendChild(script);
-}
-
-function acceptData(data: CommitData) {
-    var descriptions: string[] = data.data.map(c => c.commit.message);
-    document.getElementById('results').innerHTML = descriptions.join('<br>');
-}
-
-angular.module('sampleApp', []).controller('commitList', function () {
-    var url = 'https://api.github.com/repos/Microsoft/TypeScript/commits?callback=acceptData';
-    jsonp(url);
-
+angular.module('sampleApp', [])
+    .controller('commitList', function ($http: ng.IHttpService) {
+        $http.jsonp<CommitData>('https://api.github.com/repos/Microsoft/TypeScript/commits?callback=JSON_CALLBACK').success(data => {
+            var descriptions: string[] = data.data.map(c => c.commit.message);
+            document.getElementById('results').innerHTML = descriptions.join('<br>');
+        });
 });
 
