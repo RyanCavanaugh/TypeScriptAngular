@@ -9,6 +9,8 @@
     <script src="app.js"></script>
 </head>
 <body ng-app="sampleApp" ng-controller="CommitList">
-    <div id="results"></div>
+    <div ng-repeat="c in commits">
+        <div><a href="{{c.link}}">{{c.title}}</a> by {{c.author}}</div>
+    </div>
 </body>
 </html>

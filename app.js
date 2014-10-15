@@ -1,11 +1,14 @@
 /// <reference path="angular.d.ts" />
 /// <reference path="octokit.d.ts" />
-function commitListController($http) {
+function commitListController($scope, $http) {
     $http.jsonp('https://api.github.com/repos/Microsoft/TypeScript/commits?callback=JSON_CALLBACK').success(function (data) {
-        var descriptions = data.data.map(function (c) {
-            return c.commit.message;
+        $scope.commits = data.data.map(function (c) {
+            return ({
+                title: c.commit.message,
+                author: c.commit.author.name,
+                link: c.commit.html_url
+            });
         });
-        document.getElementById('results').innerHTML = descriptions.join('<br>');
     });
 }
 
