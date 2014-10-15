@@ -6,7 +6,7 @@ function commitListController($scope: any, $http: ng.IHttpService) {
         $scope.commits = data.data.map(c => ({
             title: c.commit.message,
             author: c.commit.author.name,
-            link: c.commit.html_url
+            link: c.html_url
         }));
     });
 }

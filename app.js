@@ -6,7 +6,7 @@ function commitListController($scope, $http) {
             return ({
                 title: c.commit.message,
                 author: c.commit.author.name,
-                link: c.commit.html_url
+                link: c.html_url
             });
         });
     });

@@ -8,7 +8,7 @@ interface CommitData {
                 date: string;
             };
             message: string;
-            html_url: string;
         };
+        html_url: string;
     }[];
 }
