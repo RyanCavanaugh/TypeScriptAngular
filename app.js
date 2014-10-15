@@ -1,23 +1,23 @@
 /// <reference path="angular.d.ts" />
 /// <reference path="angular-route.d.ts" />
 /// <reference path="octokit.d.ts" />
-var CommitDataService = (function () {
-    function CommitDataService(http) {
+var GitHubDataService = (function () {
+    function GitHubDataService(http) {
         this.http = http;
     }
-    CommitDataService.prototype.getCommits = function (callback) {
+    GitHubDataService.prototype.getCommits = function (callback) {
         this.http.jsonp('https://api.github.com/repos/Microsoft/TypeScript/commits?callback=JSON_CALLBACK').success(function (data) {
             callback(data.data);
         });
     };
-    CommitDataService.Name = 'CommitData';
-    CommitDataService.Constructor = ['$http', CommitDataService];
-    return CommitDataService;
+    GitHubDataService.Name = 'GitHubData';
+    GitHubDataService.Constructor = ['$http', GitHubDataService];
+    return GitHubDataService;
 })();
 
 var CommitListController;
 (function (CommitListController) {
-    CommitListController.Constructor = ['$scope', CommitDataService.Name, Controller];
+    CommitListController.Constructor = ['$scope', GitHubDataService.Name, Controller];
     function Controller(scope, commitData) {
         commitData.getCommits(function (commits) {
             scope.commits = commits.map(function (c) {
@@ -47,4 +47,4 @@ function route($routeProvider) {
     $routeProvider.when('/commitList', { templateUrl: 'commitList.html', controller: 'CommitList' }).otherwise({ redirectTo: '/commitList' });
 }
 
-angular.module('sampleApp', ['ngRoute']).config(route).service(CommitDataService.Name, CommitDataService.Constructor).controller('CommitList', CommitListController.Constructor).filter('shorten', messageShortenerFilter);
+angular.module('sampleApp', ['ngRoute']).config(route).service(GitHubDataService.Name, GitHubDataService.Constructor).controller('CommitList', CommitListController.Constructor).filter('shorten', messageShortenerFilter);

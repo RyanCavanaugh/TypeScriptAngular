@@ -2,9 +2,9 @@
 /// <reference path="angular-route.d.ts" />
 /// <reference path="octokit.d.ts" />
 
-class CommitDataService {
-    static Name = 'CommitData';
-    static Constructor = ['$http', CommitDataService];
+class GitHubDataService {
+    static Name = 'GitHubData';
+    static Constructor = ['$http', GitHubDataService];
     constructor(public http: ng.IHttpService) { }
 
     getCommits(callback: (data: CommitInfo[]) => void) {
@@ -23,8 +23,8 @@ module CommitListController {
         }[];
     }
 
-    export var Constructor = ['$scope', CommitDataService.Name, Controller];
-    export function Controller(scope: Scope, commitData: CommitDataService) {
+    export var Constructor = ['$scope', GitHubDataService.Name, Controller];
+    export function Controller(scope: Scope, commitData: GitHubDataService) {
         commitData.getCommits(commits => {
             scope.commits = commits.map(c => ({
                 title: c.commit.message,
@@ -54,7 +54,7 @@ function route($routeProvider: ng.route.IRouteProvider) {
 
 angular.module('sampleApp', ['ngRoute'])
     .config(route)
-    .service(CommitDataService.Name,  CommitDataService.Constructor)
+    .service(GitHubDataService.Name,  GitHubDataService.Constructor)
     .controller('CommitList',  CommitListController.Constructor)
     .filter('shorten', messageShortenerFilter);
 
