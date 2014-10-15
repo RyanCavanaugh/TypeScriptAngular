@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -6,11 +6,10 @@
     <title>TypeScript Commit Browser</title>
     <link rel="stylesheet" href="app.css" type="text/css" />
     <script src="angular.js"></script>
+    <script src="angular-route.js"></script>
     <script src="app.js"></script>
 </head>
-<body ng-app="sampleApp" ng-controller="CommitList">
-    <div ng-repeat="c in commits">
-        <div><a href="{{c.link}}">{{c.title | shorten}}</a> by {{c.author}}</div>
-    </div>
+<body ng-app="sampleApp" ng-view>
+
 </body>
 </html>

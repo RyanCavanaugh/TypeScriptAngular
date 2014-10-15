@@ -1,4 +1,5 @@
 /// <reference path="angular.d.ts" />
+/// <reference path="angular-route.d.ts" />
 /// <reference path="octokit.d.ts" />
 var CommitDataService = (function () {
     function CommitDataService(http) {
@@ -42,4 +43,8 @@ function messageShortenerFilter() {
     };
 }
 
-angular.module('sampleApp', []).service(CommitDataService.Name, CommitDataService.Constructor).controller('CommitList', CommitListController.Constructor).filter('shorten', messageShortenerFilter);
+function route($routeProvider) {
+    $routeProvider.when('/commitList', { templateUrl: 'commitList.html', controller: 'CommitList' }).otherwise({ redirectTo: '/commitList' });
+}
+
+angular.module('sampleApp', ['ngRoute']).config(route).service(CommitDataService.Name, CommitDataService.Constructor).controller('CommitList', CommitListController.Constructor).filter('shorten', messageShortenerFilter);
