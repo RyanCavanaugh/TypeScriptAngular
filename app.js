@@ -14,7 +14,7 @@ function acceptData(data) {
     document.getElementById('results').innerHTML = descriptions.join('<br>');
 }
 
-window.onload = function () {
+angular.module('sampleApp', []).controller('commitList', function () {
     var url = 'https://api.github.com/repos/Microsoft/TypeScript/commits?callback=acceptData';
     jsonp(url);
-};
+});
