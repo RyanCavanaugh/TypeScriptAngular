@@ -18,6 +18,10 @@ function commitListController($scope: CommitListControllerScope, commitData: any
         }));
     });
 }
+module commitListController {
+    export var dependencies = ['$scope', commitDataService.ServiceName];
+    export var constructor = dependencies.concat<any>(commitListController);
+}
 
 function commitDataService($http: ng.IHttpService) {
     return {
@@ -45,6 +49,6 @@ function messageShortenerFilter() {
 
 angular.module('sampleApp', [])
     .service(commitDataService.ServiceName,  commitDataService)
-    .controller('CommitList',  ['$scope', commitDataService.ServiceName, commitListController])
+    .controller('CommitList',  commitListController.constructor)
     .filter('shorten', messageShortenerFilter);
 

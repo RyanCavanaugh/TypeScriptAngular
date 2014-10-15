@@ -12,6 +12,11 @@ function commitListController($scope, commitData) {
         });
     });
 }
+var commitListController;
+(function (commitListController) {
+    commitListController.dependencies = ['$scope', commitDataService.ServiceName];
+    commitListController.constructor = commitListController.dependencies.concat(commitListController);
+})(commitListController || (commitListController = {}));
 
 function commitDataService($http) {
     return {
@@ -38,4 +43,4 @@ function messageShortenerFilter() {
     };
 }
 
-angular.module('sampleApp', []).service(commitDataService.ServiceName, commitDataService).controller('CommitList', ['$scope', commitDataService.ServiceName, commitListController]).filter('shorten', messageShortenerFilter);
+angular.module('sampleApp', []).service(commitDataService.ServiceName, commitDataService).controller('CommitList', commitListController.constructor).filter('shorten', messageShortenerFilter);
