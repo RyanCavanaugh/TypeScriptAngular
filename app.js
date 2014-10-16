@@ -23,6 +23,7 @@ var GitHubDataService = (function () {
 
 var CommitListController;
 (function (CommitListController) {
+    CommitListController.Name = 'CommitList';
     CommitListController.Constructor = ['$scope', GitHubDataService.Name, Controller];
     function Controller(scope, commitData) {
         commitData.getCommits(function (commits) {
@@ -41,6 +42,7 @@ var CommitListController;
 
 var UserInfoController;
 (function (UserInfoController) {
+    UserInfoController.Name = 'UserInfo';
     UserInfoController.Constructor = ['$scope', '$routeParams', GitHubDataService.Name, Controller];
     function Controller(scope, params, dataService) {
         dataService.getUserInfo(params.userId, function (data) {
@@ -64,7 +66,7 @@ function messageShortenerFilter() {
 }
 
 function route($routeProvider) {
-    $routeProvider.when('/commitList', { templateUrl: 'commitList.html', controller: 'CommitList' }).when('/userView/:userId', { templateUrl: 'userView.html', controller: 'UserInfo' }).otherwise({ redirectTo: '/commitList' });
+    $routeProvider.when('/commitList', { templateUrl: 'commitList.html', controller: CommitListController.Name }).when('/userView/:userId', { templateUrl: 'userView.html', controller: UserInfoController.Name }).otherwise({ redirectTo: '/commitList' });
 }
 
-angular.module('sampleApp', ['ngRoute']).config(route).service(GitHubDataService.Name, GitHubDataService.Constructor).controller('CommitList', CommitListController.Constructor).controller('UserInfo', UserInfoController.Constructor).filter('shorten', messageShortenerFilter);
+angular.module('sampleApp', ['ngRoute']).config(route).service(GitHubDataService.Name, GitHubDataService.Constructor).controller(CommitListController.Name, CommitListController.Constructor).controller(UserInfoController.Name, UserInfoController.Constructor).filter('shorten', messageShortenerFilter);
