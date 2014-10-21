@@ -15,5 +15,11 @@
             <div>{{c.message}} by {{c.author.name}}</div>
         </div>
     </div>
+    <hr />
+    <div ng-controller="IssueController">
+        <div ng-repeat="i in issues">
+            <div>{{i.title}}</div>
+        </div>
+    </div>
 </body>
 </html>
