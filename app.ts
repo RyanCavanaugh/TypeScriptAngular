@@ -4,9 +4,9 @@
 
 // "https://api.github.com/repos/Microsoft/TypeScript/issues?callback=?"
 
-angular.module('myApp', []).controller('CommitController', ($http: ng.IHttpService) => {
+angular.module('myApp', []).controller('CommitController', ($http: ng.IHttpService, $scope: any) => {
     $http.jsonp("https://api.github.com/repos/Microsoft/TypeScript/commits?callback=JSON_CALLBACK")
         .success((data: Octokit.CommitQuery) => {
-            $('#commits').html(data.data.map(c => c.commit.message).join('<br>'));
+            $scope.commits = data.data.map(c => c.commit);
       });
 });
