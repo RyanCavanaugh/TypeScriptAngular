@@ -12,14 +12,26 @@ function limitFactory() {
     };
 }
 
-angular.module('myApp', []).controller('CommitController', function ($http, $scope) {
-    $http.jsonp("https://api.github.com/repos/Microsoft/TypeScript/commits?callback=JSON_CALLBACK").success(function (data) {
-        $scope.commits = data.data.map(function (c) {
+angular.module('myApp', []).controller('CommitController', function (GitHubService, $scope) {
+    GitHubService.getCommits(function (data) {
+        $scope.commits = data.map(function (c) {
             return c.commit;
         });
     });
-}).controller('IssueController', function ($http, $scope) {
-    $http.jsonp("https://api.github.com/repos/Microsoft/TypeScript/issues?callback=JSON_CALLBACK").success(function (data) {
-        $scope.issues = data.data;
+}).controller('IssueController', function (GitHubService, $scope) {
+    GitHubService.getIssues(function (data) {
+        $scope.issues = data;
     });
+}).service('GitHubService', function ($http) {
+    function getIssues(callback) {
+        $http.jsonp("https://api.github.com/repos/Microsoft/TypeScript/issues?callback=JSON_CALLBACK").success(function (c) {
+            return callback(c.data);
+        });
+    }
+    function getCommits(callback) {
+        $http.jsonp("https://api.github.com/repos/Microsoft/TypeScript/commits?callback=JSON_CALLBACK").success(function (c) {
+            return callback(c.data);
+        });
+    }
+    return { getIssues: getIssues, getCommits: getCommits };
 }).filter('limit', limitFactory);
