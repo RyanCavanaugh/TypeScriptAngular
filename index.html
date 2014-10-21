@@ -10,6 +10,10 @@
     <script src="app.js"></script>
 </head>
 <body ng-app="myApp">
-    <div id="commits" ng-controller="CommitController"></div>
+    <div id="commits" ng-controller="CommitController">
+        <div ng-repeat="c in commits">
+            <div>{{c.message}} by {{c.author.name}}</div>
+        </div>
+    </div>
 </body>
 </html>
