@@ -8,4 +8,8 @@ angular.module('myApp', []).controller('CommitController', function ($http, $sco
             return c.commit;
         });
     });
+}).controller('IssueController', function ($http, $scope) {
+    $http.jsonp("https://api.github.com/repos/Microsoft/TypeScript/issues?callback=JSON_CALLBACK").success(function (data) {
+        $scope.issues = data.data;
+    });
 });
