@@ -28,17 +28,20 @@ class GitHubService {
     }
 }
 
+function CommitController(GitHubService: GitHubService, $scope: any) {
+    GitHubService.getCommits(data => {
+        $scope.commits = data.map(c => c.commit);
+    });
+}
+
+function IssueController(GitHubService: GitHubService, $scope: any) {
+    GitHubService.getIssues(data => {
+        $scope.issues = data;
+    });
+}    
 
 angular.module('myApp', [])
-    .controller('CommitController', (GitHubService, $scope: any) => {
-        GitHubService.getCommits(data => {
-            $scope.commits = data.map(c => c.commit);
-        });
-    })
-    .controller('IssueController', (GitHubService, $scope: any) => {
-        GitHubService.getIssues(data => {
-            $scope.issues = data;
-        });
-    })
+    .controller('CommitController', CommitController)
+    .controller('IssueController', IssueController)
     .service(GitHubService.name, GitHubService)
     .filter('limit', limitFactory);

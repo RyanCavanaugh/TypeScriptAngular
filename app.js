@@ -31,14 +31,18 @@ var GitHubService = (function () {
     return GitHubService;
 })();
 
-angular.module('myApp', []).controller('CommitController', function (GitHubService, $scope) {
+function CommitController(GitHubService, $scope) {
     GitHubService.getCommits(function (data) {
         $scope.commits = data.map(function (c) {
             return c.commit;
         });
     });
-}).controller('IssueController', function (GitHubService, $scope) {
+}
+
+function IssueController(GitHubService, $scope) {
     GitHubService.getIssues(function (data) {
         $scope.issues = data;
     });
-}).service(GitHubService.name, GitHubService).filter('limit', limitFactory);
+}
+
+angular.module('myApp', []).controller('CommitController', CommitController).controller('IssueController', IssueController).service(GitHubService.name, GitHubService).filter('limit', limitFactory);
