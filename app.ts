@@ -4,12 +4,22 @@
 
 // "https://api.github.com/repos/Microsoft/TypeScript/issues?callback=?"
 
+function limitFactory() {
+    return function (s: string) {
+        if (s.length > 80) {
+            return s.substr(0, 77) + '...';
+        } else {
+            return s;
+        }
+    }
+}
+
 angular.module('myApp', [])
     .controller('CommitController', ($http: ng.IHttpService, $scope: any) => {
         $http.jsonp("https://api.github.com/repos/Microsoft/TypeScript/commits?callback=JSON_CALLBACK")
             .success((data: Octokit.CommitQuery) => {
                 $scope.commits = data.data.map(c => c.commit);
-         });
+            });
     })
     .controller('IssueController', ($http: ng.IHttpService, $scope: any) => {
         $http.jsonp("https://api.github.com/repos/Microsoft/TypeScript/issues?callback=JSON_CALLBACK")
@@ -17,3 +27,4 @@ angular.module('myApp', [])
                 $scope.issues = data.data;
             });
     })
+    .filter('limit', limitFactory);

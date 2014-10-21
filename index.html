@@ -12,7 +12,7 @@
 <body ng-app="myApp">
     <div id="commits" ng-controller="CommitController">
         <div ng-repeat="c in commits">
-            <div>{{c.message}} by {{c.author.name}}</div>
+            <div>{{c.message | limit}} by {{c.author.name}}</div>
         </div>
     </div>
     <hr />
