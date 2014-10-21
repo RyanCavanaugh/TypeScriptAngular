@@ -12,6 +12,25 @@ function limitFactory() {
     };
 }
 
+var GitHubService = (function () {
+    function GitHubService($http) {
+        this.$http = $http;
+    }
+    GitHubService.prototype.getIssues = function (callback) {
+        this.$http.jsonp("https://api.github.com/repos/Microsoft/TypeScript/issues?callback=JSON_CALLBACK").success(function (c) {
+            return callback(c.data);
+        });
+    };
+
+    GitHubService.prototype.getCommits = function (callback) {
+        this.$http.jsonp("https://api.github.com/repos/Microsoft/TypeScript/commits?callback=JSON_CALLBACK").success(function (c) {
+            return callback(c.data);
+        });
+    };
+    GitHubService.name = 'GitHubService';
+    return GitHubService;
+})();
+
 angular.module('myApp', []).controller('CommitController', function (GitHubService, $scope) {
     GitHubService.getCommits(function (data) {
         $scope.commits = data.map(function (c) {
@@ -22,16 +41,4 @@ angular.module('myApp', []).controller('CommitController', function (GitHubServi
     GitHubService.getIssues(function (data) {
         $scope.issues = data;
     });
-}).service('GitHubService', function ($http) {
-    function getIssues(callback) {
-        $http.jsonp("https://api.github.com/repos/Microsoft/TypeScript/issues?callback=JSON_CALLBACK").success(function (c) {
-            return callback(c.data);
-        });
-    }
-    function getCommits(callback) {
-        $http.jsonp("https://api.github.com/repos/Microsoft/TypeScript/commits?callback=JSON_CALLBACK").success(function (c) {
-            return callback(c.data);
-        });
-    }
-    return { getIssues: getIssues, getCommits: getCommits };
-}).filter('limit', limitFactory);
+}).service(GitHubService.name, GitHubService).filter('limit', limitFactory);

@@ -14,6 +14,21 @@ function limitFactory() {
     }
 }
 
+class GitHubService {
+    static name = 'GitHubService';
+
+    constructor(private $http: ng.IHttpService) { }
+
+    getIssues(callback: (data: Octokit.Issue[]) => void) {
+        this.$http.jsonp("https://api.github.com/repos/Microsoft/TypeScript/issues?callback=JSON_CALLBACK").success(c => callback(c.data));
+    }
+
+    getCommits(callback: (data: Octokit.Commit[]) => void) {
+        this.$http.jsonp("https://api.github.com/repos/Microsoft/TypeScript/commits?callback=JSON_CALLBACK").success(c => callback(c.data));
+    }
+}
+
+
 angular.module('myApp', [])
     .controller('CommitController', (GitHubService, $scope: any) => {
         GitHubService.getCommits(data => {
@@ -25,13 +40,5 @@ angular.module('myApp', [])
             $scope.issues = data;
         });
     })
-    .service('GitHubService', ($http: ng.IHttpService) => {
-        function getIssues(callback: (data: Octokit.Issue[]) => void) {
-            $http.jsonp("https://api.github.com/repos/Microsoft/TypeScript/issues?callback=JSON_CALLBACK").success(c => callback(c.data));
-        }
-        function getCommits(callback: (data: Octokit.Commit[]) => void) {
-            $http.jsonp("https://api.github.com/repos/Microsoft/TypeScript/commits?callback=JSON_CALLBACK").success(c => callback(c.data));
-        }
-        return { getIssues: getIssues, getCommits: getCommits };
-    })
+    .service(GitHubService.name, GitHubService)
     .filter('limit', limitFactory);
