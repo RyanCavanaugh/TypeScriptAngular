@@ -1,5 +1,6 @@
 /// <reference path="jquery.d.ts" />
 /// <reference path="angular.d.ts" />
+/// <reference path="angular-route.d.ts" />
 /// <reference path="octokit.d.ts" />
 function limitFactory() {
     return function (s) {
@@ -23,6 +24,12 @@ var GitHubService = (function () {
 
     GitHubService.prototype.getCommits = function (callback) {
         this.$http.jsonp("https://api.github.com/repos/Microsoft/TypeScript/commits?callback=JSON_CALLBACK").success(function (c) {
+            return callback(c.data);
+        });
+    };
+
+    GitHubService.prototype.getUser = function (username, callback) {
+        this.$http.jsonp("https://api.github.com/users/" + username + "?callback=JSON_CALLBACK").success(function (c) {
             return callback(c.data);
         });
     };
@@ -50,4 +57,18 @@ var IssueController;
     IssueController.Controller = Controller;
 })(IssueController || (IssueController = {}));
 
-angular.module('myApp', []).controller('CommitController', CommitController.Controller).controller('IssueController', IssueController.Controller).service(GitHubService.name, GitHubService).filter('limit', limitFactory);
+var UserInfoController;
+(function (UserInfoController) {
+    function Controller($routeParams, GitHubService, $scope) {
+        GitHubService.getUser($routeParams.userId, function (user) {
+            $scope.user = user;
+        });
+    }
+    UserInfoController.Controller = Controller;
+})(UserInfoController || (UserInfoController = {}));
+
+function route($routeProvider) {
+    $routeProvider.when('/listing', { templateUrl: 'listing.html', controller: 'CommitController' }).when('/userView/:userId', { templateUrl: 'userView.html', controller: 'UserInfoController' }).otherwise({ redirectTo: '/listing' });
+}
+
+angular.module('myApp', ['ngRoute']).config(route).controller('CommitController', CommitController.Controller).controller('UserInfoController', UserInfoController.Controller).controller('IssueController', IssueController.Controller).service(GitHubService.name, GitHubService).filter('limit', limitFactory);
