@@ -1,7 +1,6 @@
 /// <reference path="jquery.d.ts" />
 /// <reference path="angular.d.ts" />
 /// <reference path="octokit.d.ts" />
-// "https://api.github.com/repos/Microsoft/TypeScript/issues?callback=?"
 function limitFactory() {
     return function (s) {
         if (s.length > 80) {
@@ -31,18 +30,24 @@ var GitHubService = (function () {
     return GitHubService;
 })();
 
-function CommitController(GitHubService, $scope) {
-    GitHubService.getCommits(function (data) {
-        $scope.commits = data.map(function (c) {
-            return c.commit;
+var CommitController;
+(function (CommitController) {
+    function Controller(GitHubService, $scope) {
+        GitHubService.getCommits(function (data) {
+            $scope.commits = data;
         });
-    });
-}
+    }
+    CommitController.Controller = Controller;
+})(CommitController || (CommitController = {}));
 
-function IssueController(GitHubService, $scope) {
-    GitHubService.getIssues(function (data) {
-        $scope.issues = data;
-    });
-}
+var IssueController;
+(function (IssueController) {
+    function Controller(GitHubService, $scope) {
+        GitHubService.getIssues(function (data) {
+            $scope.issues = data;
+        });
+    }
+    IssueController.Controller = Controller;
+})(IssueController || (IssueController = {}));
 
-angular.module('myApp', []).controller('CommitController', CommitController).controller('IssueController', IssueController).service(GitHubService.name, GitHubService).filter('limit', limitFactory);
+angular.module('myApp', []).controller('CommitController', CommitController.Controller).controller('IssueController', IssueController.Controller).service(GitHubService.name, GitHubService).filter('limit', limitFactory);
