@@ -9,17 +9,6 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="app.js"></script>
 </head>
-<body ng-app="myApp">
-    <div id="commits" ng-controller="CommitController">
-        <div ng-repeat="c in commits">
-            <div>{{c.commit.message | limit}} by {{c.commit.author.name}}</div>
-        </div>
-    </div>
-    <hr />
-    <div ng-controller="IssueController">
-        <div ng-repeat="i in issues">
-            <div>{{i.title}}</div>
-        </div>
-    </div>
+<body ng-app="myApp" ng-view>
 </body>
 </html>
